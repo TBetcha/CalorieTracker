@@ -74,15 +74,16 @@ const UICtrl = (function () {
 		addBtn: '.add-btn',
 		itemNameInput: '#item-name',
 		itemCaloriesInput: '#item-calories',
-		totalCalories: '.total-calories';
+		totalCalories: '.total-calories',
 	};
 
 	//public methods
 	return {
 		populateItemList: function (items) {
 			let html = '';
+
 			items.forEach(function (item) {
-				html += `      <li class="collection-item edit-item" id="item-${item.id}">
+				html += `<li class="collection-item edit-item" id="item-${item.id}">
 				<strong>${item.name}: </strong> <em>${item.calories} Calories</em>
 				<a href="#" class="secondary-content">
 				  <i class="fa fa-pencil"></i>
@@ -101,7 +102,7 @@ const UICtrl = (function () {
 
 		addListItem: function (item) {
 			//show the list
-			document.querySelector(UISelectors.itemList).style.display = 'blobk';
+			document.querySelector(UISelectors.itemList).style.display = 'block';
 			//create li element
 			const li = document.createElement('li');
 			//add class
@@ -111,7 +112,7 @@ const UICtrl = (function () {
 			//add html
 			li.innerHTML = `<strong>${item.name}: </strong> <em>${item.calories} Calories</em>
 			<a href="#" class="secondary-content">
-			  <i class="fa fa-pencil"></i>
+			  <i class="edit-item fa fa-pencil"></i>
 			</a>`;
 			//insert item
 			document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
@@ -126,10 +127,9 @@ const UICtrl = (function () {
 		hideList: function () {
 			document.querySelector(UISelectors.itemList).style.display = 'none';
 		},
-		
+
 		showTotalCalories: function (totalCalories) {
 			document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
-			
 		},
 
 		getSelectors: function () {
@@ -187,7 +187,13 @@ const App = (function (ItemCtrl, UICtrl) {
 				UICtrl.populateItemList(items);
 			}
 			//populate list w/ items
-			UICtrl.populateItemList(items);
+			//		UICtrl.populateItemList(items);
+
+			//Get total calories
+			const totalCalories = ItemCtrl.getTotalCalories();
+
+			//add total calories to UI
+			UICtrl.showTotalCalories(totalCalories);
 
 			//load event listeners
 			loadEventListeners();
