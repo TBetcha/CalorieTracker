@@ -1,6 +1,40 @@
 /** @format */
 
 //storage controller
+const StorageCtrl = (function () {
+	//public methods
+	return {
+		storeItem: function (item) {
+			let items;
+			//checkl if items in local storage
+			if (localStorage.getItem('items') === null) {
+				items = [];
+				//push new item
+				items.push(item);
+				//sert local storage
+				localStorage.setItem('items', JSON.stringify(items));
+			} else {
+				//get what is already in local storage
+				items = JSON.parse(localStorage.getItem('items'));
+
+				//push new item
+				items.push(item);
+
+				//reset local storage
+				localStorage.setItem('items', JSON.stringify(items));
+			}
+		},
+		getItemsFromStorage: function () {
+			let items;
+			if (localStorage.getItem('items') === null) {
+				items = [];
+			} else {
+				items = JSON.parse(localStorage.getItem('items'));
+			}
+			return items;
+		},
+	};
+})();
 
 //Item controller
 const ItemCtrl = (function () {
@@ -13,11 +47,12 @@ const ItemCtrl = (function () {
 
 	//data structure (state)
 	const data = {
-		items: [
-			// { id: 0, name: 'Steak Dinner', calories: 1200 },
-			// { id: 1, name: 'Cookie', calories: 400 },
-			// { id: 2, name: 'Eggs', calories: 300 },
-		],
+		//	items: [
+		// { id: 0, name: 'Steak Dinner', calories: 1200 },
+		// { id: 1, name: 'Cookie', calories: 400 },
+		// { id: 2, name: 'Eggs', calories: 300 },
+		//	],
+		items: StorageCtrl.getItemsFromStorage(),
 		currentItem: null,
 		totalCalories: 0,
 	};
@@ -252,7 +287,7 @@ const UICtrl = (function () {
 })();
 
 //App Controller
-const App = (function (ItemCtrl, UICtrl) {
+const App = (function (ItemCtrl, StorageCtrl, UICtrl) {
 	//load event listeners
 	const loadEventListeners = function () {
 		//UIsel set equal to get selectors so I can use it
@@ -304,6 +339,9 @@ const App = (function (ItemCtrl, UICtrl) {
 
 			//add total calories to UI
 			UICtrl.showTotalCalories(totalCalories);
+
+			//store in local storage
+			StorageCtrl.storeItem(newItem);
 
 			//clear fields
 			UICtrl.clearInput();
@@ -407,6 +445,6 @@ const App = (function (ItemCtrl, UICtrl) {
 			loadEventListeners();
 		},
 	};
-})(ItemCtrl, UICtrl);
+})(ItemCtrl, StorageCtrl, UICtrl);
 
 App.init();
