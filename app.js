@@ -73,6 +73,19 @@ const ItemCtrl = (function () {
 			return found;
 		},
 
+		deleteItem: function (id) {
+			//get ids
+			ids = data.items.map(function (item) {
+				return item.id;
+			});
+
+			//get index
+			const index = ids.indexOf(id);
+
+			//remove item
+			data.items.splice(index, 1);
+		},
+
 		setCurrentItem: function (item) {
 			data.currentItem = item;
 		},
@@ -154,6 +167,12 @@ const UICtrl = (function () {
 			</a>`;
 			//insert item
 			document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
+		},
+
+		deleteListItem: function (id) {
+			const itemID = `#item-${id}`;
+			const item = document.querySelector(itemID);
+			item.remove();
 		},
 		updateListItem: function (item) {
 			let listItems = document.querySelectorAll(UISelectors.listItems);
@@ -295,6 +314,21 @@ const App = (function (ItemCtrl, UICtrl) {
 		e.preventDefault();
 	};
 
+	const itemDeleteSubmit = function (e) {
+		const currentItem = ItemCtrl.getCurrentItem();
+
+		//delete from data str
+		ItemCtrl.deleteItem(currentItem.id);
+		//delete from UI
+		UICtrl.deleteListItem(currentItem.id);
+		//get total calories
+		const totalCalories = ItemCtrl.getTotalCalories();
+		//add total calories to UI
+		UICtrl.showTotalCalories(totalCalories);
+
+		UICtrl.clearEditState();
+		e.preventDefault();
+	};
 	//update item submit
 	const itemUpdateSubmit = function (e) {
 		//get item input
@@ -305,17 +339,10 @@ const App = (function (ItemCtrl, UICtrl) {
 
 		UICtrl.updateListItem(updatedItem);
 		//Get total calories
-		const totalCalories = ItemCtrl.getTotalCalories();
-
-		//add total calories to UI
-		UICtrl.showTotalCalories(totalCalories);
-
-		e.preventDefault();
-	};
-
-	//delete button event
-	const itemDeleteSubmit = function (e) {
-		console.log(123);
+		const totalCalories = ItemCtrl.getTotalCalories(); //update item event
+		document.querySelector(UISelectors.updateBtn).addEventListener('click', itemUpdateSubmit);
+		//delete from data str
+		ItemCtrl.currentItem.id;
 		e.preventDefault();
 	};
 	//returns are publuc
