@@ -393,11 +393,14 @@ const App = (function (ItemCtrl, StorageCtrl, UICtrl) {
 		const updatedItem = ItemCtrl.updateItem(input.name, input.calories);
 
 		UICtrl.updateListItem(updatedItem);
+
 		//Get total calories
 		const totalCalories = ItemCtrl.getTotalCalories(); //update item event
-		document.querySelector(UISelectors.updateBtn).addEventListener('click', itemUpdateSubmit);
-		//delete from data str
-		ItemCtrl.currentItem.id;
+
+		UICtrl.showTotalCalories(totalCalories);
+
+		UICtrl.clearEditState();
+
 		e.preventDefault();
 	};
 
@@ -432,9 +435,6 @@ const App = (function (ItemCtrl, StorageCtrl, UICtrl) {
 				//populate
 				UICtrl.populateItemList(items);
 			}
-			//populate list w/ items
-			//		UICtrl.populateItemList(items);
-
 			//Get total calories
 			const totalCalories = ItemCtrl.getTotalCalories();
 
